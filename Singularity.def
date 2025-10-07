@@ -2,7 +2,7 @@ Bootstrap: docker
 From: ubuntu:25.04
 
 %files
-    requirements.txt /opt/conda/requirements.txt
+    requirements.txt /tmp/requirements.txt
 
 %environment
     export PATH="/opt/conda/bin:$PATH"
@@ -20,7 +20,7 @@ From: ubuntu:25.04
     # Initialize conda and install packages
     . /opt/conda/etc/profile.d/conda.sh
     conda activate base
-    pip install --no-cache-dir -r /opt/conda/requirements.txt
+    pip install --no-cache-dir -r /tmp/requirements.txt
 
 %runscript
     exec "$@"
