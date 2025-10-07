@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
@@ -22,16 +22,13 @@ jobs:
         sudo apt-get install -y apptainer
 
     - name: Build Singularity Image
-      run: |
-        sudo apptainer build singularity_dask_zarr.sif Singularity.def
+      run: make build
+
+    - name: Test Singularity Image
+      run: make test
 
     - name: Log in to GitHub Container Registry
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-    - name: Convert and Tag Image
-      run: |
-        sudo apptainer build --force docker-image://ghcr.io/${{ github.repository }}:latest singularity_dask_zarr.sif
-        docker tag singularity_dask_zarr.sif ghcr.io/${{ github.repository }}:latest
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | apptainer remote login --username ${{ github.actor }} --password-stdin oras://ghcr.io
 
     - name: Push image to GitHub Container Registry
-      run: docker push ghcr.io/${{ github.repository }}:latest
+      run: apptainer push singularity_dask_zarr.sif oras://ghcr.io/${{ github.repository }}:latest
