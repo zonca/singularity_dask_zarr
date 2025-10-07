@@ -12,6 +12,7 @@ From: ubuntu:25.04
     apt-get install -y wget build-essential
 
     # Install Miniconda
+    rm -rf /opt/conda
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
     bash /tmp/miniconda.sh -b -p /opt/conda
     rm /tmp/miniconda.sh
